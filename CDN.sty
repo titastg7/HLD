@@ -1,0 +1,92 @@
+
+/*##########################################################################
+
+Content Delivery Network (CDN) involves creating a system that delivers content 
+(e.g., images, videos, documents) to users efficiently and reliably,
+ regardless of their geographic location. 
+
+##########################################################################*/
+
+1. System Requirements
+--------------------------------
+Efficient delivery of static content.
+Low latency and high availability.
+Scalability to handle large numbers of requests.
+Load balancing and redundancy.
+Logging and monitoring for performance metrics.
+Security features to protect content and users.
+
+
+2. Components
+--------------------------------
+Origin Server: The server where the original content is stored.
+Edge Servers (CDN Nodes): Distributed servers that cache and deliver content to users.
+DNS Load Balancer: Directs users to the nearest edge server.
+Content Replication: Mechanism to replicate content from the origin server to edge servers.
+Monitoring and Analytics: Tools to monitor performance, usage, and detect anomalies.
+Security Measures: SSL/TLS encryption, DDoS protection, and access control
+
+
+3. High-Level Architecture
+--------------------------------
+
+                     +-----------------------+
+                     |      Origin Server    |
+                     +-----------+-----------+
+                                 |
+                                 |
+                     +-----------v-----------+
+                     |       Central CDN     |
+                     +-----------+-----------+
+                                 |
+        +-----------+-----------+-----------+-----------+
+        |           |           |           |           |
++-------v-------+   +-------v-------+   +-------v-------+   +-------v-------+
+|   Edge Node   |   |   Edge Node   |   |   Edge Node   |   |   Edge Node   |
+|    (Region A) |   |    (Region B) |   |    (Region C) |   |    (Region D) |
++---------------+   +---------------+   +---------------+   +---------------+
+        |                   |                   |                   |
+   +----+----+         +----+----+         +----+----+         +----+----+
+   |  Users  |         |  Users  |         |  Users  |         |  Users  |
+   +---------+         +---------+         +---------+         +---------+
+
+
+4. Detailed Design
+--------------------------------
+    Origin Server
+        Stores the master copy of all content.
+        Syncs updates with edge servers.
+    Edge Servers (CDN Nodes)
+        Located strategically around the globe to be closer to end-users.
+        Cache content to reduce load on the origin server and decrease latency.
+        Implement cache eviction policies (e.g., LRU - Least Recently Used).
+    DNS Load Balancer
+        Routes user requests to the nearest or most optimal edge server based on factors like geographic location, server load, and network conditions.
+        Uses techniques like Anycast routing for efficient request distribution.
+    Content Replication
+        Proactively replicates popular content to edge servers.
+        Uses pull or push methods for replication:
+            Pull: Edge servers request content from the origin server when needed.
+            Push: Origin server pushes content updates to edge servers.
+    Monitoring and Analytics
+        Collects data on request latency, cache hit/miss rates, and server load.
+        Detects and alerts on performance issues or failures.
+    Security Measures
+        SSL/TLS: Ensures secure content delivery.
+        DDoS Protection: Detects and mitigates distributed denial-of-service attacks.
+        Access Control: Restricts access to authorized users.
+
+5. Scalability and Redundancy
+--------------------------------
+    Horizontal Scaling: Add more edge servers as demand increases.
+    Redundancy: Deploy multiple edge servers in each region to ensure high availability.
+    Failover Mechanisms: Redirect traffic to operational servers in case of failures.
+
+6. Implementation Considerations
+--------------------------------
+    Content Invalidation: Mechanism to invalidate cached content when updates occur.
+    Log Management: Centralized logging for monitoring and debugging.
+    APIs: Provide APIs for content upload, cache management, and analytics.
+7. Example Scenarios
+    Cache Miss: A user requests a file that is not in the edge server cache. The edge server fetches it from the origin server, caches it, and serves it to the user.
+    Cache Hit: A user requests a file that is already cached in the edge server. The edge server serves the content directly, resulting in lower latency.
